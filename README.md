@@ -1,4 +1,4 @@
-# 🧮 calcula_imposto_saas_2026.html ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
+# 🧮 [calcula_imposto_saas_2026.html](https://andsilva81.github.io/rotinas/calcula_imposto_saas_2026.html) ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
 
 - **HTML + CSS + JavaScript puro**, tudo em um único arquivo por calculadora.
 - Sem frameworks, sem instalação, sem passo de build.
