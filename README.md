@@ -16,13 +16,28 @@ Compara Simples Nacional × Lucro Presumido, calcula pró-labore (INSS + IRPF) e
 
 # 👾 [jogo_duelo.html](https://andsilva81.github.io/rotinas/jogo_duelo.html) ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
 
-- **HTML + CSS + JavaScript puro**, tudo em um único arquivo por calculadora.
+- **HTML + CSS + JavaScript puro**
 - Sem frameworks, sem instalação, sem passo de build.
 - Funciona offline depois de aberto.
 
 Joguinho idealizado pelo meu filho. Falta muito pra melhorar, mas já é um excelente começo!!!
 
 #### [🕹️JOGAR](https://andsilva81.github.io/rotinas/jogo_duelo.html) 
+
+---
+
+
+
+
+# 📑 [gerador-catalogo.html](https://andsilva81.github.io/rotinas/gerador-catalogo.html) ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
+
+- **HTML + CSS + JavaScript puro**
+- Sem frameworks, sem instalação, sem passo de build.
+- Funciona offline depois de aberto.
+
+Gerador de catálogos PDF. Adicione fotos dos produtos e configure o layout!!!
+
+#### [🖨️Ver](https://andsilva81.github.io/rotinas/gerador-catalogo.html) 
 
 ---
 
