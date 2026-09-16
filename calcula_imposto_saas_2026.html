@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Impostos — Software/SaaS para Órgão Público</title>
+<style>
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --ink:#141a22; --muted:#5c6773; --line:#e3e7ed;
+  --brand:#1f6feb; --brand-soft:#e8f0fe; --good:#1a7f4b; --good-soft:#e5f5ec;
+  --warn:#b25a00; --warn-soft:#fdf0e1; --accent:#7b3fe4; --accent-soft:#f0eafb;
+  --shadow:0 1px 3px rgba(20,26,34,.06),0 8px 24px rgba(20,26,34,.05);
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --bg:#0e1116; --card:#171b22; --ink:#e6e9ef; --muted:#9aa4b1; --line:#262c36;
+    --brand:#5b9bff; --brand-soft:#16233c; --good:#4ecb86; --good-soft:#14271c;
+    --warn:#e0913f; --warn-soft:#2a1e10; --accent:#a983f0; --accent-soft:#1f1730;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --card:#171b22; --ink:#e6e9ef; --muted:#9aa4b1; --line:#262c36;
+  --brand:#5b9bff; --brand-soft:#16233c; --good:#4ecb86; --good-soft:#14271c;
+  --warn:#e0913f; --warn-soft:#2a1e10; --accent:#a983f0; --accent-soft:#1f1730;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+header.top{margin-bottom:20px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--brand)}
+h1{font-size:clamp(22px,4vw,30px);margin:.2em 0 .1em;letter-spacing:-.02em;line-height:1.15}
+.sub{color:var(--muted);font-size:14px;max-width:70ch}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:880px){.grid{grid-template-columns:minmax(0,380px) minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.card h2{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
+label:first-of-type{margin-top:0}
+.hint{font-weight:400;color:var(--muted);font-size:12px}
+input[type=number],select{
+  width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;
+  background:var(--bg);color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums;
+}
+input:focus,select:focus{outline:2px solid var(--brand);outline-offset:1px;border-color:transparent}
+.seg{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:10px;border:1px solid var(--line)}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:13px;padding:9px 6px;border-radius:7px;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.check{display:flex;align-items:flex-start;gap:9px;margin-top:14px;font-size:13px;font-weight:600}
+.check input{margin-top:2px;width:16px;height:16px;accent-color:var(--brand)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.pill.good{background:var(--good-soft);color:var(--good)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.headline{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:4px}
+.big{font-size:clamp(26px,6vw,38px);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.big.small{font-size:clamp(20px,4vw,26px)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:14px 0 4px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:12px}
+.kpi .l{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.kpi .v{font-size:19px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.tbl th,.tbl td{text-align:left;padding:9px 4px;border-bottom:1px solid var(--line)}
+.tbl td:last-child,.tbl th:last-child{text-align:right}
+.tbl tr.sum td{font-weight:800;border-top:2px solid var(--line);border-bottom:0;padding-top:11px}
+.tbl tr.grp td{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:700;padding-top:14px;padding-bottom:2px;border-bottom:0}
+.tbl td.pct{color:var(--muted);width:64px;text-align:right}
+.scroll{overflow-x:auto}
+.note{font-size:12.5px;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:8px;padding:10px 12px;margin-top:14px}
+.note b{color:var(--ink)}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--brand-soft);color:var(--brand);margin-left:8px}
+.tag.acc{background:var(--accent-soft);color:var(--accent)}
+details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+summary{font-size:13px;font-weight:700;cursor:pointer;color:var(--brand)}
+details p,details li{font-size:13px;color:var(--muted)}
+.disc{font-size:11.5px;color:var(--muted);margin-top:22px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Software / SaaS · B2G · exercício 2026</div>
+  <h1>Calculadora de impostos — empresa de software que vende para órgão público</h1>
+  <p class="sub">Compara Simples Nacional e Lucro Presumido, calcula o pró-labore (INSS + IRPF) e mostra as retenções na fonte típicas de venda para o setor público. Ajuste os campos e os números recalculam sozinhos.</p>
+</header>
+
+<div class="grid">
+  <!-- ENTRADAS -->
+  <section class="card" aria-label="Dados">
+    <h2>Dados da empresa</h2>
+
+    <label>Regime tributário</label>
+    <div class="seg" id="seg-regime">
+      <button data-v="simples" class="on">Simples Nacional</button>
+      <button data-v="presumido">Lucro Presumido</button>
+    </div>
+
+    <label>Faturamento do mês <span class="hint">(receita SaaS)</span></label>
+    <input type="number" id="fat" value="50000" min="0" step="1000">
+
+    <label>RBT12 — receita bruta dos últimos 12 meses <span class="hint">define a faixa</span></label>
+    <input type="number" id="rbt12" value="600000" min="0" step="10000">
+
+    <label>Pró-labore mensal <span class="hint">total dos sócios</span></label>
+    <input type="number" id="pl" value="14000" min="0" step="500">
+
+    <div class="row2">
+      <div>
+        <label>Nº de sócios <span class="hint">com pró-labore</span></label>
+        <input type="number" id="socios" value="2" min="1" step="1">
+      </div>
+      <div>
+        <label>Folha CLT mensal <span class="hint">salários, sem sócios</span></label>
+        <input type="number" id="folha" value="0" min="0" step="500">
+      </div>
+    </div>
+
+    <label id="lbl-iss">ISS do município (%) <span class="hint">Presumido; no Simples já vai no DAS</span></label>
+    <input type="number" id="iss" value="2.9" min="0" max="5" step="0.1">
+
+    <label class="check">
+      <input type="checkbox" id="ret" checked>
+      <span>Órgão público retém tributos na nota (B2G)<br><span class="hint">Não muda o total devido — muda o que já sai retido na nota.</span></span>
+    </label>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="card" aria-label="Resultado">
+    <h2>Resultado mensal <span id="rtag" class="tag">Simples · Anexo III</span></h2>
+
+    <div class="headline">
+      <span class="big" id="totalImposto">R$ 0</span>
+      <span class="pill good" id="efPill">0% da receita</span>
+    </div>
+    <p class="sub" style="margin:0">Carga tributária total no mês (empresa + pró-labore dos sócios).</p>
+
+    <div class="kpis">
+      <div class="kpi"><div class="l">Sobra p/ a empresa</div><div class="v" id="sobra">R$ 0</div></div>
+      <div class="kpi"><div class="l">Líquido aos sócios</div><div class="v" id="liqSocios">R$ 0</div></div>
+      <div class="kpi"><div class="l" id="fatorL">Fator R</div><div class="v" id="fatorV">—</div></div>
+    </div>
+
+    <div class="scroll">
+      <table class="tbl" id="breakdown"><tbody></tbody></table>
+    </div>
+
+    <div class="note" id="retNote"></div>
+
+    <details>
+      <summary>Como cada número é calculado</summary>
+      <ul>
+        <li><b>Simples Nacional:</b> alíquota efetiva = (RBT12 × alíquota nominal − parcela a deduzir) ÷ RBT12, aplicada sobre o faturamento do mês. O <b>Fator R</b> = folha 12 meses (incluindo pró-labore) ÷ RBT12: se ≥ 28% cai no <b>Anexo III</b> (começa em 6%); abaixo, <b>Anexo V</b> (começa em 15,5%). Por isso subir o pró-labore pode <i>reduzir</i> o imposto do DAS. INSS patronal e a maioria dos tributos já estão dentro do DAS.</li>
+        <li><b>Lucro Presumido (serviços):</b> IRPJ 15% e CSLL 9% sobre base presumida de 32% da receita (= 4,8% e 2,88% da receita); adicional de IRPJ 10% sobre a base que exceder R$ 20.000/mês; PIS 0,65% e COFINS 3% sobre a receita; ISS conforme o município; INSS patronal 20% sobre pró-labore e folha (aqui <i>fora</i> do imposto de renda).</li>
+        <li><b>Pró-labore:</b> INSS do sócio = 11% até o teto de R$ 8.475,55 por sócio (desconto máx. R$ 932,31). IRPF: isento até R$ 5.000/mês por sócio (Lei 15.270/2025); acima, estimativa progressiva.</li>
+      </ul>
+    </details>
+  </section>
+</div>
+
+<p class="disc">
+  Estimativa para planejamento, com valores vigentes em 2026 (salário mínimo R$ 1.621,00, teto INSS R$ 8.475,55, isenção de IRPF até R$ 5.000/mês). Em 2026 a Reforma Tributária está em fase de teste (CBS 0,9% + IBS 0,1% na nota, compensados com o sistema atual — sem aumento efetivo de carga); a mudança real começa em 2027. O IRPF do pró-labore acima de R$ 5.000 usa uma aproximação da regra de transição. ISS, retenções e enquadramento de CNAE variam por município e contrato. Isto não é aconselhamento contábil ou jurídico — confirme os números com o seu contador antes de recolher.
+</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const BRL=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const BRL2=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+const PCT=n=>(n*100).toLocaleString('pt-BR',{maximumFractionDigits:2})+'%';
+
+let regime='simples';
+$('seg-regime').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  regime=b.dataset.v;
+  [...$('seg-regime').children].forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('#lbl-iss,#iss').forEach(el=>el.style.opacity=regime==='presumido'?'1':'.45');
+  calc();
+});
+
+const TETO=8475.55, INSS_MAX=932.31, ISENCAO_IR=5000, TETO_IR_TRANS=7350;
+
+const AIII=[[180000,.06,0],[360000,.112,9360],[720000,.135,17640],[1800000,.16,35640],[3600000,.21,125640],[4800000,.33,648000]];
+const AV =[[180000,.155,0],[360000,.18,4500],[720000,.195,9900],[1800000,.205,17100],[3600000,.23,62100],[4800000,.305,540000]];
+
+function efetivaSimples(rbt12,tabela){
+  if(rbt12<=0) return 0;
+  let f=tabela.find(r=>rbt12<=r[0])||tabela[tabela.length-1];
+  return Math.max(0,(rbt12*f[1]-f[2])/rbt12);
+}
+// IRPF mensal por sócio (base já líquida de INSS)
+function irpf(base){
+  if(base<=ISENCAO_IR) return 0;
+  const cheia = Math.max(0, base*0.275 - 908.73); // faixa superior
+  if(base>=TETO_IR_TRANS) return cheia;
+  // transição 2026: interpolação entre 0 (em 5.000) e imposto cheio (em 7.350)
+  const cheia7350 = 7350*0.275 - 908.73;
+  return cheia7350 * (base-ISENCAO_IR)/(TETO_IR_TRANS-ISENCAO_IR);
+}
+
+function calc(){
+  const fat=+$('fat').value||0, rbt12=+$('rbt12').value||0, pl=+$('pl').value||0;
+  const n=Math.max(1,+$('socios').value||1), folha=+$('folha').value||0, iss=(+$('iss').value||0)/100;
+  const reter=$('ret').checked;
+
+  const folha12=(folha+pl)*12;
+  const fatorR = rbt12>0 ? folha12/rbt12 : 0;
+
+  // --- Pró-labore (comum aos regimes) ---
+  const plPorSocio=pl/n;
+  const inssSocio=Math.min(plPorSocio,TETO)*0.11*n;
+  const baseIR=plPorSocio-Math.min(plPorSocio,TETO)*0.11;
+  const irSocio=irpf(baseIR)*n;
+
+  const rows=[]; let impostoEmpresa=0, encargoPatronal=0;
+  let anexoLabel='';
+
+  if(regime==='simples'){
+    const anexo3 = fatorR>=0.28;
+    const ef=efetivaSimples(rbt12, anexo3?AIII:AV);
+    const das=ef*fat;
+    impostoEmpresa=das;
+    anexoLabel='Simples · '+(anexo3?'Anexo III':'Anexo V');
+    rows.push(['grp','Empresa','']);
+    rows.push(['','DAS ('+(anexo3?'Anexo III':'Anexo V')+')',das,ef]);
+    rows.push(['grp','Pró-labore dos sócios','']);
+    rows.push(['','INSS sócios (11%, até o teto)',inssSocio,'']);
+    rows.push(['','IRPF sócios (estimativa)',irSocio,'']);
+    if(folha>0) rows.push(['','FGTS sobre folha CLT (8%)',folha*0.08,'']);
+    encargoPatronal = (folha>0?folha*0.08:0);
+  } else {
+    const basePres=fat*0.32;
+    const irpj=basePres*0.15;
+    const adic=Math.max(0,(basePres-20000))*0.10;
+    const csll=basePres*0.09;
+    const pis=fat*0.0065, cofins=fat*0.03, issV=fat*iss;
+    const cpp=(pl+folha)*0.20;
+    const fgts=folha>0?folha*0.08:0;
+    impostoEmpresa=irpj+adic+csll+pis+cofins+issV;
+    encargoPatronal=cpp+fgts;
+    anexoLabel='Lucro Presumido';
+    rows.push(['grp','Empresa · sobre a receita','']);
+    rows.push(['','IRPJ (15% s/ 32%)',irpj,irpj/fat]);
+    if(adic>0) rows.push(['','Adicional IRPJ (10%)',adic,adic/fat]);
+    rows.push(['','CSLL (9% s/ 32%)',csll,csll/fat]);
+    rows.push(['','PIS (0,65%)',pis,0.0065]);
+    rows.push(['','COFINS (3%)',cofins,0.03]);
+    rows.push(['','ISS ('+PCT(iss)+')',issV,iss]);
+    rows.push(['grp','Encargos sobre remuneração','']);
+    rows.push(['','INSS patronal (20% s/ pró-labore + folha)',cpp,'']);
+    if(fgts>0) rows.push(['','FGTS folha CLT (8%)',fgts,'']);
+    rows.push(['grp','Pró-labore dos sócios','']);
+    rows.push(['','INSS sócios (11%, até o teto)',inssSocio,'']);
+    rows.push(['','IRPF sócios (estimativa)',irSocio,'']);
+  }
+
+  const totalImposto=impostoEmpresa+encargoPatronal+inssSocio+irSocio;
+  const efTotal= fat>0 ? totalImposto/fat : 0;
+  const custoEmpresa=impostoEmpresa+encargoPatronal;
+  const sobraEmpresa=fat-custoEmpresa-pl;
+  const liqSocios=pl-inssSocio-irSocio;
+
+  // render
+  const tb=$('breakdown').querySelector('tbody'); tb.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    if(r[0]==='grp'){tr.className='grp';tr.innerHTML=`<td colspan="3">${r[1]}</td>`;}
+    else{
+      tr.innerHTML=`<td>${r[1]}</td><td class="pct">${r[3]!==''&&r[3]!=null?PCT(r[3]):''}</td><td>${BRL2(r[2])}</td>`;
+    }
+    tb.appendChild(tr);
+  });
+  const trs=document.createElement('tr');trs.className='sum';
+  trs.innerHTML=`<td>Total de tributos no mês</td><td class="pct">${PCT(efTotal)}</td><td>${BRL2(totalImposto)}</td>`;
+  tb.appendChild(trs);
+
+  $('totalImposto').textContent=BRL(totalImposto);
+  const p=$('efPill');p.textContent=PCT(efTotal)+' da receita';
+  p.className='pill '+(efTotal>0.20?'warn':'good');
+  $('sobra').textContent=BRL(sobraEmpresa);
+  $('liqSocios').textContent=BRL(liqSocios);
+  $('rtag').textContent=anexoLabel;
+  $('rtag').className='tag'+(regime==='presumido'?' acc':'');
+
+  if(regime==='simples'){
+    $('fatorL').textContent='Fator R';
+    $('fatorV').textContent=PCT(fatorR)+(fatorR>=0.28?' ✓':'');
+    $('fatorV').style.color=fatorR>=0.28?'var(--good)':'var(--warn)';
+  } else {
+    $('fatorL').textContent='Base presumida';
+    $('fatorV').textContent=BRL(fat*0.32);
+    $('fatorV').style.color='var(--ink)';
+  }
+
+  // retenção
+  const nb=$('retNote');
+  if(!reter){ nb.innerHTML='<b>Sem retenção pelo órgão:</b> a empresa recolhe tudo por conta própria (DAS ou as guias do Presumido).'; }
+  else if(regime==='simples'){
+    const issRet=fat*iss;
+    nb.innerHTML=`<b>Retenção na fonte (B2G):</b> optante do Simples normalmente <b>não</b> sofre a retenção federal (IN 1234) — apresenta a declaração de optante. O município pode reter o <b>ISS</b> (~${BRL2(issRet)}), que depois é <b>abatido do DAS</b>. Ou seja, é fluxo de caixa, não custo extra.`;
+  } else {
+    const fedRet=fat*0.0465 + fat*0.012; // PIS/COFINS/CSLL 4,65% + IR 1,2% (aprox. serviços)
+    const issRet=fat*iss;
+    nb.innerHTML=`<b>Retenção na fonte (B2G):</b> em órgão federal aplica-se a IN RFB 1234 — retenção aproximada de <b>${BRL2(fedRet)}</b> (IR + CSLL + PIS + COFINS, ~5,85% para serviços) que você <b>compensa</b> no recolhimento. O município retém o <b>ISS</b> (~${BRL2(issRet)}). Tudo isso é adiantamento do que já está no total acima, não imposto novo.`;
+  }
+}
+
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',calc));
+document.querySelectorAll('#lbl-iss,#iss').forEach(el=>el.style.opacity='.45');
+calc();
+</script>
+</body>
+</html>
