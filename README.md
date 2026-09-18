@@ -46,6 +46,36 @@ Gerador de catálogos PDF. Adicione fotos dos produtos e configure o layout!!!
 
 
 
+# 📮 [consulta-cep.html](https://andsilva81.github.io/rotinas/consulta-cep.html) ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
+
+- **HTML + CSS + JavaScript puro**
+- Sem frameworks, sem instalação, sem passo de build.
+
+Realiza consulta de CEP.
+
+#### [📮Consultar](https://andsilva81.github.io/rotinas/consulta-cep.html) 
+
+---
+
+
+
+
+# 🏢 [consulta-cnpj.html](https://andsilva81.github.io/rotinas/consulta-cnpj.html) ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-HTML%20%2B%20JS-orange)
+
+- **HTML + CSS + JavaScript puro**
+- Sem frameworks, sem instalação, sem passo de build.
+
+Realiza consulta de dados da empresa pelo CNPJ.
+
+#### [🏢Consultar](https://andsilva81.github.io/rotinas/consulta-cnpj.html) 
+
+---
+
+
+
+
+
+
 
 
 
