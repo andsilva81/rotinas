@@ -9,342 +9,124 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#FBFAF7;
-    --surface:#FFFFFF;
-    --ink:#1B2238;
-    --muted:#6A7185;
-    --line:#E9E5DC;
-    --accent:#F2B705;
-    --accent-ink:#8A6A00;
-    --ok:#2E9E6B;
-    --ok-bg:rgba(46,158,107,.12);
-    --warn:#C58A00;
-    --warn-bg:rgba(197,138,0,.12);
-    --danger:#C6493B;
-    --danger-bg:rgba(198,73,59,.12);
-    --shadow:0 24px 60px -20px rgba(27,34,56,.28);
-    --radius:18px;
+    --paper:#FBFAF7; --surface:#FFFFFF; --ink:#1B2238; --muted:#6A7185;
+    --line:#E9E5DC; --accent:#F2B705; --accent-ink:#8A6A00;
+    --ok:#2E9E6B; --ok-bg:rgba(46,158,107,.12);
+    --warn:#C58A00; --warn-bg:rgba(197,138,0,.12);
+    --danger:#C6493B; --danger-bg:rgba(198,73,59,.12);
+    --shadow:0 24px 60px -20px rgba(27,34,56,.28); --radius:18px;
   }
-
   *{box-sizing:border-box;margin:0;padding:0}
-
   body{
     font-family:'Inter',system-ui,sans-serif;
     background:
       radial-gradient(1200px 500px at 85% -10%, rgba(242,183,5,.10), transparent 60%),
       radial-gradient(900px 500px at 5% 110%, rgba(27,34,56,.06), transparent 55%),
       var(--paper);
-    color:var(--ink);
-    min-height:100dvh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-    -webkit-font-smoothing:antialiased;
+    color:var(--ink); min-height:100dvh; display:flex; align-items:center;
+    justify-content:center; padding:24px; -webkit-font-smoothing:antialiased;
   }
-
-  .card{
-    width:100%;
-    max-width:480px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    padding:38px 34px 32px;
-  }
-
-  .stamp{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    font-size:12px;
-    font-weight:600;
-    letter-spacing:.02em;
-    color:var(--accent-ink);
-    background:rgba(242,183,5,.14);
-    border:1px solid rgba(242,183,5,.35);
-    padding:6px 12px;
-    border-radius:999px;
-    margin-bottom:20px;
-  }
+  .card{ width:100%; max-width:480px; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:38px 34px 32px; }
+  .stamp{ display:inline-flex; align-items:center; gap:8px; font-size:12px;
+    font-weight:600; letter-spacing:.02em; color:var(--accent-ink);
+    background:rgba(242,183,5,.14); border:1px solid rgba(242,183,5,.35);
+    padding:6px 12px; border-radius:999px; margin-bottom:20px; }
   .stamp svg{width:15px;height:15px}
-
-  h1{
-    font-family:'Sora',sans-serif;
-    font-size:27px;
-    font-weight:700;
-    line-height:1.15;
-    letter-spacing:-.01em;
-    margin-bottom:8px;
-  }
-  .sub{
-    color:var(--muted);
-    font-size:14.5px;
-    line-height:1.5;
-    margin-bottom:26px;
-  }
-
-  label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    color:var(--ink);
-    margin-bottom:8px;
-  }
-
-  .field{
-    display:flex;
-    gap:10px;
-    align-items:stretch;
-  }
-
-  input[type="text"]{
-    flex:1;
-    font-family:'JetBrains Mono',monospace;
-    font-size:18px;
-    font-weight:500;
-    letter-spacing:.02em;
-    color:var(--ink);
-    background:var(--paper);
-    border:1.5px solid var(--line);
-    border-radius:12px;
-    padding:14px 16px;
-    width:100%;
-    transition:border-color .16s ease, box-shadow .16s ease;
-  }
+  h1{ font-family:'Sora',sans-serif; font-size:27px; font-weight:700;
+    line-height:1.15; letter-spacing:-.01em; margin-bottom:8px; }
+  .sub{ color:var(--muted); font-size:14.5px; line-height:1.5; margin-bottom:26px; }
+  label{ display:block; font-size:13px; font-weight:600; color:var(--ink); margin-bottom:8px; }
+  .field{ display:flex; gap:10px; align-items:stretch; }
+  input[type="text"]{ flex:1; font-family:'JetBrains Mono',monospace; font-size:18px;
+    font-weight:500; letter-spacing:.02em; color:var(--ink); background:var(--paper);
+    border:1.5px solid var(--line); border-radius:12px; padding:14px 16px; width:100%;
+    transition:border-color .16s ease, box-shadow .16s ease; }
   input[type="text"]::placeholder{color:#B9BAC3;font-weight:400}
-  input[type="text"]:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 4px rgba(242,183,5,.18);
-  }
-
-  button.search{
-    font-family:'Sora',sans-serif;
-    font-size:15px;
-    font-weight:600;
-    color:var(--ink);
-    background:var(--accent);
-    border:none;
-    border-radius:12px;
-    padding:0 22px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    transition:transform .12s ease, filter .16s ease;
-    white-space:nowrap;
-  }
+  input[type="text"]:focus{ outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(242,183,5,.18); }
+  button.search{ font-family:'Sora',sans-serif; font-size:15px; font-weight:600;
+    color:var(--ink); background:var(--accent); border:none; border-radius:12px;
+    padding:0 22px; cursor:pointer; display:inline-flex; align-items:center;
+    justify-content:center; gap:8px; transition:transform .12s ease, filter .16s ease;
+    white-space:nowrap; }
   button.search:hover{filter:brightness(1.04)}
   button.search:active{transform:translateY(1px)}
   button.search:disabled{opacity:.6;cursor:progress}
   button.search svg{width:17px;height:17px}
-
-  .hint{
-    margin-top:12px;
-    min-height:18px;
-    font-size:13px;
-    color:var(--danger);
-    font-weight:500;
-    line-height:1.4;
-  }
-
-  .spinner{
-    width:16px;height:16px;
-    border:2px solid rgba(27,34,56,.25);
-    border-top-color:var(--ink);
-    border-radius:50%;
-    animation:spin .7s linear infinite;
-  }
+  .hint{ margin-top:12px; min-height:18px; font-size:13px; color:var(--danger);
+    font-weight:500; line-height:1.4; }
+  .hint.info{color:var(--muted)}
+  .spinner{ width:16px;height:16px; border:2px solid rgba(27,34,56,.25);
+    border-top-color:var(--ink); border-radius:50%; animation:spin .7s linear infinite; }
   @keyframes spin{to{transform:rotate(360deg)}}
-
-  /* ---------- Popup ---------- */
-  .overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(20,25,42,.5);
-    backdrop-filter:blur(4px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity .2s ease;
-    z-index:50;
-  }
+  .overlay{ position:fixed; inset:0; background:rgba(20,25,42,.5);
+    backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center;
+    padding:24px; opacity:0; pointer-events:none; transition:opacity .2s ease; z-index:50; }
   .overlay.open{opacity:1;pointer-events:auto}
-
-  .modal{
-    width:100%;
-    max-width:500px;
-    max-height:calc(100dvh - 48px);
-    display:flex;
-    flex-direction:column;
-    background:var(--surface);
-    border-radius:20px;
-    box-shadow:var(--shadow);
-    overflow:hidden;
-    transform:translateY(12px) scale(.98);
-    transition:transform .22s cubic-bezier(.2,.8,.2,1);
-  }
+  .modal{ width:100%; max-width:500px; max-height:calc(100dvh - 48px); display:flex;
+    flex-direction:column; background:var(--surface); border-radius:20px;
+    box-shadow:var(--shadow); overflow:hidden; transform:translateY(12px) scale(.98);
+    transition:transform .22s cubic-bezier(.2,.8,.2,1); }
   .overlay.open .modal{transform:translateY(0) scale(1)}
-
-  .modal-head{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:14px;
-    padding:20px 22px;
-    background:var(--ink);
-    color:#fff;
-    flex-shrink:0;
-  }
-  .modal-head .name{
-    font-family:'Sora',sans-serif;
-    font-size:16.5px;
-    font-weight:600;
-    line-height:1.3;
-  }
-  .modal-head .cnpj-big{
-    font-family:'JetBrains Mono',monospace;
-    font-size:13px;
-    letter-spacing:.03em;
-    color:rgba(255,255,255,.6);
-    margin-top:5px;
-  }
-  .close{
-    background:rgba(255,255,255,.1);
-    border:none;
-    color:#fff;
-    width:34px;height:34px;
-    border-radius:9px;
-    cursor:pointer;
-    display:flex;align-items:center;justify-content:center;
-    transition:background .15s ease;
-    flex-shrink:0;
-  }
+  .modal-head{ display:flex; align-items:flex-start; justify-content:space-between;
+    gap:14px; padding:20px 22px; background:var(--ink); color:#fff; flex-shrink:0; }
+  .modal-head .name{ font-family:'Sora',sans-serif; font-size:16.5px; font-weight:600; line-height:1.3; }
+  .modal-head .cnpj-big{ font-family:'JetBrains Mono',monospace; font-size:13px;
+    letter-spacing:.03em; color:rgba(255,255,255,.6); margin-top:5px; }
+  .close{ background:rgba(255,255,255,.1); border:none; color:#fff; width:34px;height:34px;
+    border-radius:9px; cursor:pointer; display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease; flex-shrink:0; }
   .close:hover{background:rgba(255,255,255,.2)}
   .close svg{width:16px;height:16px}
-
-  .modal-body{
-    padding:20px 22px;
-    overflow-y:auto;
-  }
-
+  .modal-body{ padding:20px 22px; overflow-y:auto; }
   .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-  .badge{
-    font-size:12px;
-    font-weight:600;
-    padding:5px 11px;
-    border-radius:999px;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-  }
+  .badge{ font-size:12px; font-weight:600; padding:5px 11px; border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px; }
   .badge .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
   .badge.ok{color:var(--ok);background:var(--ok-bg)}
   .badge.warn{color:var(--warn);background:var(--warn-bg)}
   .badge.danger{color:var(--danger);background:var(--danger-bg)}
   .badge.neutral{color:var(--muted);background:rgba(106,113,133,.1)}
-
-  .section-title{
-    font-size:11.5px;
-    font-weight:600;
-    color:var(--muted);
-    letter-spacing:.03em;
-    margin:20px 0 8px;
-  }
+  .section-title{ font-size:11.5px; font-weight:600; color:var(--muted);
+    letter-spacing:.03em; margin:20px 0 8px; }
   .section-title:first-of-type{margin-top:0}
-
   .rows{display:flex;flex-direction:column;gap:2px}
-  .row{
-    display:flex;
-    justify-content:space-between;
-    gap:16px;
-    padding:10px 0;
-    border-bottom:1px solid var(--line);
-  }
+  .row{ display:flex; justify-content:space-between; gap:16px; padding:10px 0;
+    border-bottom:1px solid var(--line); }
   .row:last-child{border-bottom:none}
-  .row .k{
-    font-size:12.5px;
-    color:var(--muted);
-    font-weight:500;
-    flex-shrink:0;
-  }
-  .row .v{
-    font-size:14px;
-    font-weight:500;
-    text-align:right;
-    color:var(--ink);
-  }
+  .row .k{ font-size:12.5px; color:var(--muted); font-weight:500; flex-shrink:0; }
+  .row .v{ font-size:14px; font-weight:500; text-align:right; color:var(--ink); }
   .row .v.empty{color:#B9BAC3;font-weight:400;font-style:italic}
-
-  .block{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:13px 15px;
-    font-size:14px;
-    line-height:1.5;
-    color:var(--ink);
-  }
+  .block{ background:var(--paper); border:1px solid var(--line); border-radius:12px;
+    padding:13px 15px; font-size:14px; line-height:1.5; color:var(--ink); }
   .block + .block{margin-top:8px}
-
-  .actions{
-    padding:16px 22px;
-    border-top:1px solid var(--line);
-    flex-shrink:0;
-    background:var(--surface);
-  }
-  button.copy{
-    width:100%;
-    font-family:'Sora',sans-serif;
-    font-size:14.5px;
-    font-weight:600;
-    color:#fff;
-    background:var(--ink);
-    border:none;
-    border-radius:12px;
-    padding:14px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:9px;
-    transition:background .18s ease, transform .12s ease;
-  }
+  .actions{ padding:16px 22px; border-top:1px solid var(--line); flex-shrink:0; background:var(--surface); }
+  button.copy{ width:100%; font-family:'Sora',sans-serif; font-size:14.5px; font-weight:600;
+    color:#fff; background:var(--ink); border:none; border-radius:12px; padding:14px;
+    cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    transition:background .18s ease, transform .12s ease; }
   button.copy:hover{background:#262e49}
   button.copy:active{transform:translateY(1px)}
   button.copy.done{background:var(--ok)}
   button.copy svg{width:17px;height:17px}
-
-  @media (max-width:420px){
-    .card{padding:30px 22px 26px}
-    .field{flex-direction:column}
-    button.search{padding:14px}
-  }
-
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-  }
+  .source{ text-align:center; font-size:11px; color:var(--muted); padding:0 22px 14px; }
+  @media (max-width:420px){ .card{padding:30px 22px 26px} .field{flex-direction:column} button.search{padding:14px} }
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
 </head>
 <body>
-
   <main class="card">
     <span class="stamp">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V8l6-4 6 4v13"/><path d="M10 12h.01M14 12h.01M10 16h.01M14 16h.01"/></svg>
-      Receita Federal · ReceitaWS
+      Receita Federal
     </span>
     <h1>Consulta de CNPJ</h1>
-    <p class="sub">Digite um CNPJ para ver os dados cadastrais da empresa. O resultado abre numa janela com opção de copiar.</p>
-
+    <p class="sub">Digite um CNPJ para ver os dados cadastrais da empresa. O resultado abre numa janela com opcao de copiar.</p>
     <label for="cnpj">CNPJ</label>
     <div class="field">
-      <input id="cnpj" type="text" inputmode="numeric" autocomplete="off"
-             maxlength="18" placeholder="00.000.000/0000-00" aria-describedby="hint">
+      <input id="cnpj" type="text" inputmode="numeric" autocomplete="off" maxlength="18" placeholder="00.000.000/0000-00" aria-describedby="hint">
       <button class="search" id="btn" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         Buscar
@@ -352,8 +134,6 @@
     </div>
     <p class="hint" id="hint" role="status" aria-live="polite"></p>
   </main>
-
-  <!-- Popup -->
   <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalName">
     <div class="modal">
       <div class="modal-head">
@@ -372,218 +152,161 @@
           <span id="copyText">Copiar dados</span>
         </button>
       </div>
+      <div class="source" id="source"></div>
     </div>
   </div>
-
 <script>
-  const input   = document.getElementById('cnpj');
-  const btn      = document.getElementById('btn');
-  const hint     = document.getElementById('hint');
-  const overlay  = document.getElementById('overlay');
-  const closeBtn = document.getElementById('close');
-  const body      = document.getElementById('body');
-  const copyBtn   = document.getElementById('copy');
-  const copyText  = document.getElementById('copyText');
-  const copyIcon  = document.getElementById('copyIcon');
+  /* ===== CONFIG =====
+     Proxy no seu servidor, usado como plano B quando a consulta direta
+     e bloqueada por CORS (ou por qualquer outra falha de rede). */
+  const API_URL = 'https://softwareminas.com.br/api/cnpj.php';
+  const DIRECT_URL = cnpj => `https://receitaws.com.br/v1/cnpj/${cnpj}`;
+  const PROXY_URL  = cnpj => `${API_URL}?cnpj=${cnpj}`;
 
-  let copyString = '';
+  const input=document.getElementById('cnpj'), btn=document.getElementById('btn'),
+    hint=document.getElementById('hint'), overlay=document.getElementById('overlay'),
+    closeBtn=document.getElementById('close'), body=document.getElementById('body'),
+    copyBtn=document.getElementById('copy'), copyText=document.getElementById('copyText'),
+    copyIcon=document.getElementById('copyIcon'), sourceEl=document.getElementById('source');
+  let copyString='';
 
-  // Máscara 00.000.000/0000-00
-  input.addEventListener('input', () => {
-    let v = input.value.replace(/\D/g, '').slice(0, 14);
-    v = v.replace(/^(\d{2})(\d)/, '$1.$2')
-         .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-         .replace(/\.(\d{3})(\d)/, '.$1/$2')
-         .replace(/(\d{4})(\d)/, '$1-$2');
-    input.value = v;
-    hint.textContent = '';
+  input.addEventListener('input',()=>{
+    let v=input.value.replace(/\D/g,'').slice(0,14);
+    v=v.replace(/^(\d{2})(\d)/,'$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3')
+       .replace(/\.(\d{3})(\d)/,'.$1/$2').replace(/(\d{4})(\d)/,'$1-$2');
+    input.value=v; setHint('');
   });
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')buscar();});
+  btn.addEventListener('click',buscar);
 
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') buscar(); });
-  btn.addEventListener('click', buscar);
+  function setHint(msg,info){ hint.textContent=msg||''; hint.className='hint'+(info?' info':''); }
+  function setLoading(on){
+    btn.disabled=on;
+    btn.innerHTML=on?'<span class="spinner"></span> Buscando'
+      :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Buscar';
+  }
+  function fmtMoeda(v){const n=Number(v);if(!v||isNaN(n))return null;
+    return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
 
-  function setLoading(on) {
-    btn.disabled = on;
-    btn.innerHTML = on
-      ? '<span class="spinner"></span> Buscando'
-      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Buscar';
+  /* Faz um GET e devolve {status, d}. Lanca erro em falha de rede/CORS. */
+  async function tentar(url){
+    const resp=await fetch(url);
+    const d=await resp.json().catch(()=>null);
+    return {status:resp.status, d};
   }
 
-  function fmtMoeda(v) {
-    const n = Number(v);
-    if (!v || isNaN(n)) return null;
-    return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
+  async function buscar(){
+    const cnpj=input.value.replace(/\D/g,'');
+    if(cnpj.length!==14){ setHint('Informe um CNPJ com 14 digitos.'); input.focus(); return; }
 
-  async function buscar() {
-    const cnpj = input.value.replace(/\D/g, '');
-    hint.style.color = 'var(--danger)';
+    setLoading(true); setHint('');
+    let via=null, result=null;
 
-    if (cnpj.length !== 14) {
-      hint.textContent = 'Informe um CNPJ com 14 dígitos.';
-      input.focus();
-      return;
+    /* 1) Tenta direto na ReceitaWS. Se der CORS/rede, o fetch lanca erro
+          e caimos no catch para usar o proxy. */
+    try{
+      result=await tentar(DIRECT_URL(cnpj));
+      via='ReceitaWS (direto)';
+    }catch(e){
+      console.warn('Consulta direta falhou (provavel CORS). Tentando via softwareminas...', e);
     }
 
-    setLoading(true);
-    hint.textContent = '';
-
-    try {
-      const resp = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj}`);
-
-      if (resp.status === 429) {
-        hint.textContent = 'Limite de consultas excedido (a API gratuita permite ~3 por minuto). Aguarde um instante e tente de novo.';
+    /* Usa o proxy se: a direta falhou, nao trouxe corpo, ou bateu no limite. */
+    const precisaProxy = !result || !result.d || result.status===429;
+    if(precisaProxy){
+      setHint('Consultando via softwareminas.com.br...', true);
+      try{
+        result=await tentar(PROXY_URL(cnpj));
+        via='softwareminas.com.br';
+      }catch(e2){
+        setLoading(false);
+        setHint('Nao foi possivel consultar. Verifique a conexao ou se a API esta no ar.');
         return;
       }
-      if (!resp.ok) throw new Error('rede');
-
-      const d = await resp.json();
-
-      if (d.status === 'ERROR') {
-        hint.textContent = d.message || 'CNPJ não encontrado.';
-        return;
-      }
-      mostrarResultado(d);
-    } catch (err) {
-      hint.textContent = 'Não foi possível consultar agora. Pode ser conexão, restrição do navegador (CORS) ou limite da API.';
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
+    const {status,d}=result;
+
+    if(status===429){ setHint((d&&d.message)||'Limite de consultas excedido. Aguarde um instante.'); return; }
+    if(!d){ setHint('Resposta invalida do servidor.'); return; }
+    if(d.status==='ERROR'){ setHint(d.message||'CNPJ nao encontrado.'); return; }
+
+    setHint('');
+    mostrarResultado(d, via);
   }
 
-  function badgeSituacao(sit) {
-    const s = (sit || '').toUpperCase();
-    if (s === 'ATIVA') return `<span class="badge ok"><span class="dot"></span>${sit}</span>`;
-    if (s === 'SUSPENSA' || s === 'INAPTA') return `<span class="badge warn"><span class="dot"></span>${sit}</span>`;
-    if (s === 'BAIXADA' || s === 'NULA') return `<span class="badge danger"><span class="dot"></span>${sit}</span>`;
-    return sit ? `<span class="badge neutral"><span class="dot"></span>${sit}</span>` : '';
+  function badgeSituacao(sit){
+    const s=(sit||'').toUpperCase();
+    if(s==='ATIVA')return `<span class="badge ok"><span class="dot"></span>${sit}</span>`;
+    if(s==='SUSPENSA'||s==='INAPTA')return `<span class="badge warn"><span class="dot"></span>${sit}</span>`;
+    if(s==='BAIXADA'||s==='NULA')return `<span class="badge danger"><span class="dot"></span>${sit}</span>`;
+    return sit?`<span class="badge neutral"><span class="dot"></span>${sit}</span>`:'';
   }
-
-  function mostrarResultado(d) {
-    const val = v => (v && String(v).trim()) ? v : null;
-
-    document.getElementById('modalName').textContent = val(d.nome) || 'Empresa';
-    document.getElementById('modalCnpj').textContent = d.cnpj || '';
-
-    const atividade = (d.atividade_principal && d.atividade_principal[0])
-      ? `${d.atividade_principal[0].code} — ${d.atividade_principal[0].text}` : null;
-
-    const endereco = [
-      [val(d.logradouro), val(d.numero)].filter(Boolean).join(', '),
-      val(d.complemento),
-      val(d.bairro),
-      [val(d.municipio), val(d.uf)].filter(Boolean).join(' - '),
-      d.cep ? `CEP ${d.cep}` : null
+  function mostrarResultado(d, via){
+    const val=v=>(v&&String(v).trim())?v:null;
+    document.getElementById('modalName').textContent=val(d.nome)||'Empresa';
+    document.getElementById('modalCnpj').textContent=d.cnpj||'';
+    sourceEl.textContent = via ? `Fonte: ${via}` : '';
+    const atividade=(d.atividade_principal&&d.atividade_principal[0])
+      ?`${d.atividade_principal[0].code} — ${d.atividade_principal[0].text}`:null;
+    const endereco=[
+      [val(d.logradouro),val(d.numero)].filter(Boolean).join(', '),
+      val(d.complemento), val(d.bairro),
+      [val(d.municipio),val(d.uf)].filter(Boolean).join(' - '),
+      d.cep?`CEP ${d.cep}`:null
     ].filter(Boolean).join('\n');
-
-    const contato = [
-      val(d.telefone) ? `Tel: ${d.telefone}` : null,
-      val(d.email) ? `E-mail: ${d.email}` : null
+    const contato=[
+      val(d.telefone)?`Tel: ${d.telefone}`:null,
+      val(d.email)?`E-mail: ${d.email}`:null
     ].filter(Boolean).join('\n');
-
-    const linhas = [
-      ['Nome fantasia', val(d.fantasia)],
-      ['Tipo',          val(d.tipo)],
-      ['Abertura',      val(d.abertura)],
-      ['Porte',         val(d.porte)],
-      ['Natureza jurídica', val(d.natureza_juridica)],
-      ['Capital social', fmtMoeda(d.capital_social)],
+    const linhas=[
+      ['Nome fantasia',val(d.fantasia)], ['Tipo',val(d.tipo)],
+      ['Abertura',val(d.abertura)], ['Porte',val(d.porte)],
+      ['Natureza juridica',val(d.natureza_juridica)],
+      ['Capital social',fmtMoeda(d.capital_social)],
     ];
-
-    let html = '';
-
-    // Selos
-    const badges = [];
-    if (val(d.situacao)) badges.push(badgeSituacao(d.situacao));
-    if (val(d.porte))    badges.push(`<span class="badge neutral">${d.porte}</span>`);
-    if (val(d.tipo))     badges.push(`<span class="badge neutral">${d.tipo}</span>`);
-    if (badges.length) html += `<div class="badges">${badges.join('')}</div>`;
-
-    // Dados gerais
-    html += `<div class="section-title">Dados gerais</div><div class="rows">`;
-    html += linhas.map(([k, v]) => `
-      <div class="row">
-        <span class="k">${k}</span>
-        <span class="v ${v ? '' : 'empty'}">${v || '—'}</span>
-      </div>`).join('');
-    html += `</div>`;
-
-    // Atividade
-    if (atividade) {
-      html += `<div class="section-title">Atividade principal</div><div class="block">${atividade}</div>`;
-    }
-
-    // Endereço
-    if (endereco) {
-      html += `<div class="section-title">Endereço</div><div class="block">${endereco.replace(/\n/g, '<br>')}</div>`;
-    }
-
-    // Contato
-    if (contato) {
-      html += `<div class="section-title">Contato</div><div class="block">${contato.replace(/\n/g, '<br>')}</div>`;
-    }
-
-    body.innerHTML = html;
-
-    // Texto para copiar
-    copyString = [
-      `${val(d.nome) || ''}`,
-      d.fantasia ? `(${d.fantasia})` : '',
-      `CNPJ: ${d.cnpj}`,
-      d.situacao ? `Situação: ${d.situacao}` : '',
-      d.abertura ? `Abertura: ${d.abertura}` : '',
-      d.natureza_juridica ? `Natureza jurídica: ${d.natureza_juridica}` : '',
-      d.porte ? `Porte: ${d.porte}` : '',
-      fmtMoeda(d.capital_social) ? `Capital social: ${fmtMoeda(d.capital_social)}` : '',
-      atividade ? `Atividade: ${atividade}` : '',
-      endereco ? `Endereço:\n${endereco}` : '',
-      contato ? contato : ''
-    ].filter(l => l && l.trim()).join('\n');
-
-    resetCopy();
-    abrir();
+    let html='';
+    const badges=[];
+    if(val(d.situacao))badges.push(badgeSituacao(d.situacao));
+    if(val(d.porte))badges.push(`<span class="badge neutral">${d.porte}</span>`);
+    if(val(d.tipo))badges.push(`<span class="badge neutral">${d.tipo}</span>`);
+    if(badges.length)html+=`<div class="badges">${badges.join('')}</div>`;
+    html+=`<div class="section-title">Dados gerais</div><div class="rows">`;
+    html+=linhas.map(([k,v])=>`<div class="row"><span class="k">${k}</span><span class="v ${v?'':'empty'}">${v||'—'}</span></div>`).join('');
+    html+=`</div>`;
+    if(atividade)html+=`<div class="section-title">Atividade principal</div><div class="block">${atividade}</div>`;
+    if(endereco)html+=`<div class="section-title">Endereco</div><div class="block">${endereco.replace(/\n/g,'<br>')}</div>`;
+    if(contato)html+=`<div class="section-title">Contato</div><div class="block">${contato.replace(/\n/g,'<br>')}</div>`;
+    body.innerHTML=html;
+    copyString=[
+      `${val(d.nome)||''}`, d.fantasia?`(${d.fantasia})`:'',
+      `CNPJ: ${d.cnpj}`, d.situacao?`Situacao: ${d.situacao}`:'',
+      d.abertura?`Abertura: ${d.abertura}`:'',
+      d.natureza_juridica?`Natureza juridica: ${d.natureza_juridica}`:'',
+      d.porte?`Porte: ${d.porte}`:'',
+      fmtMoeda(d.capital_social)?`Capital social: ${fmtMoeda(d.capital_social)}`:'',
+      atividade?`Atividade: ${atividade}`:'',
+      endereco?`Endereco:\n${endereco}`:'', contato?contato:''
+    ].filter(l=>l&&l.trim()).join('\n');
+    resetCopy(); abrir();
   }
-
-  function abrir() {
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    closeBtn.focus();
+  function abrir(){overlay.classList.add('open');document.body.style.overflow='hidden';closeBtn.focus();}
+  function fechar(){overlay.classList.remove('open');document.body.style.overflow='';input.focus();}
+  closeBtn.addEventListener('click',fechar);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)fechar();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))fechar();});
+  function resetCopy(){
+    copyBtn.classList.remove('done'); copyText.textContent='Copiar dados';
+    copyIcon.innerHTML='<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>';
   }
-  function fechar() {
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    input.focus();
-  }
-
-  closeBtn.addEventListener('click', fechar);
-  overlay.addEventListener('click', e => { if (e.target === overlay) fechar(); });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) fechar();
+  copyBtn.addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(copyString);}
+    catch{const ta=document.createElement('textarea');ta.value=copyString;
+      document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+    copyBtn.classList.add('done'); copyText.textContent='Copiado!';
+    copyIcon.innerHTML='<path d="M20 6 9 17l-5-5"/>'; setTimeout(resetCopy,1800);
   });
-
-  function resetCopy() {
-    copyBtn.classList.remove('done');
-    copyText.textContent = 'Copiar dados';
-    copyIcon.innerHTML = '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>';
-  }
-
-  copyBtn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(copyString);
-    } catch {
-      const ta = document.createElement('textarea');
-      ta.value = copyString;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      ta.remove();
-    }
-    copyBtn.classList.add('done');
-    copyText.textContent = 'Copiado!';
-    copyIcon.innerHTML = '<path d="M20 6 9 17l-5-5"/>';
-    setTimeout(resetCopy, 1800);
-  });
-
   input.focus();
 </script>
 </body>
