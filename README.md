@@ -71,6 +71,16 @@ Realiza consulta de dados da empresa pelo CNPJ.
 
 ---
 
+# 🏢 [reduz_imagem_no_bd.php] ![Status](https://img.shields.io/badge/status-ativo-brightgreen) ![HTML](https://img.shields.io/badge/feito%20com-PHP-orange)
+
+- **PHP puro**
+- Conecta no banco de dados, acessa tabela com a foto e reduz o tamanho da imagem em pixels.
+
+
+
+
+---
+
 
 
 
