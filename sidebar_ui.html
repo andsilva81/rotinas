@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SideBar UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #e50914;
+    --red-glow: rgba(229, 9, 20, .55);
+    --text: #f2f2f4;
+    --muted: rgba(255, 255, 255, .55);
+    --glass-top: rgba(120, 120, 128, .38);
+    --glass-bottom: rgba(60, 60, 66, .30);
+    --border: rgba(255, 255, 255, .16);
+    --w-open: 280px;
+    --w-closed: 84px;
+    --icon-col: 42px;           /* centro do ícone fica fixo nos dois estados */
+    --ease: cubic-bezier(.65, 0, .25, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: #141416;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Fundo abstrato (ondas cinza) ---------- */
+  .bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+
+  /* ---------- Sidebar (vidro) ---------- */
+  .sidebar {
+    position: relative;
+    width: var(--w-open);
+    height: min(860px, calc(100vh - 40px));
+    padding: 18px 0 20px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    border: 1px solid var(--border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .18),
+      inset 0 0 40px rgba(255, 255, 255, .04),
+      0 30px 60px rgba(0, 0, 0, .55),
+      0 8px 20px rgba(0, 0, 0, .35);
+    display: flex;
+    flex-direction: column;
+    transition: width .45s var(--ease);
+  }
+
+  .sidebar.collapsed { width: var(--w-closed); }
+
+  /* conteúdo rola se a tela for baixa */
+  .scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+
+  /* ---------- Bolinhas estilo macOS ---------- */
+  .traffic {
+    display: flex;
+    gap: 7px;
+    padding-left: 26px;
+    margin-bottom: 18px;
+    transition: padding .45s var(--ease);
+  }
+  .traffic span { width: 10px; height: 10px; border-radius: 50%; }
+  .traffic span:nth-child(1) { background: #ff5f57; }
+  .traffic span:nth-child(2) { background: #febc2e; }
+  .traffic span:nth-child(3) { background: #28c840; }
+  .collapsed .traffic { padding-left: 21px; }
+
+  /* ---------- Cabeçalho ---------- */
+  .header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 22px 0 24px;
+  }
+
+  .brand {
+    position: relative;
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    white-space: nowrap;
+    flex: 1;
+    height: 30px;
+  }
+  .brand span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: opacity .3s ease, transform .45s var(--ease);
+  }
+  .brand .short {
+    font-size: 30px;
+    top: -4px;
+    left: 9px;
+    opacity: 0;
+  }
+  .collapsed .brand .full { opacity: 0; transform: translateX(-10px); }
+  .collapsed .brand .short { opacity: 1; }
+
+  .bell {
+    position: relative;
+    background: none;
+    border: 0;
+    color: var(--text);
+    cursor: pointer;
+    margin-right: 22px;
+    display: grid;
+    place-items: center;
+    transition: opacity .25s ease;
+  }
+  .bell svg { width: 22px; height: 22px; }
+  .bell .badge {
+    position: absolute;
+    top: -8px;
+    right: -9px;
+  }
+  .collapsed .bell { opacity: 0; pointer-events: none; }
+
+  /* botão de recolher (fica sobre a borda direita) */
+  .toggle {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 0;
+    background: #fff;
+    color: #222;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .4);
+    z-index: 5;
+  }
+  .toggle svg {
+    width: 14px;
+    height: 14px;
+    transition: transform .45s var(--ease);
+  }
+  .collapsed .toggle svg { transform: rotate(180deg); }
+
+  .toggle-label {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translate(-6px, -50%);
+    background: #fff;
+    color: var(--red);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .35);
+  }
+  .toggle:hover .toggle-label,
+  .toggle:focus-visible .toggle-label { opacity: 1; transform: translate(0, -50%); }
+
+  /* ---------- Badges ---------- */
+  .badge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--red);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 10px var(--red-glow);
+  }
+
+  /* ---------- Divisor com brilho ---------- */
+  .divider {
+    height: 1px;
+    margin: 14px 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .35), transparent);
+    transition: margin .45s var(--ease);
+  }
+  .collapsed .divider { margin: 14px 26px; }
+
+  /* ---------- Perfil ---------- */
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 4px 22px 4px 19px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .avatar {
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, .45);
+    background: radial-gradient(circle at 50% 35%, #d9d9d9 0 20%, transparent 21%),
+                radial-gradient(ellipse at 50% 100%, #1d1d1d 0 42%, transparent 43%),
+                linear-gradient(160deg, #9a9a9a, #4a4a4a);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .4);
+    overflow: hidden;
+  }
+  .profile-info { flex: 1; min-width: 0; }
+  .profile-info strong { display: block; font-size: 16px; font-weight: 600; }
+  .profile-info small {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .profile-info small svg { width: 12px; height: 12px; }
+  .profile .chev { width: 16px; height: 16px; color: var(--muted); flex: none; }
+
+  /* ---------- Busca ---------- */
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 20px 0 0;
+    margin-top: 2px;
+  }
+  .search .icon-slot { color: rgba(255, 255, 255, .75); }
+  .search input {
+    flex: 1;
+    min-width: 0;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .06);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, .25);
+    color: var(--text);
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    outline: none;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .search input::placeholder { color: rgba(255, 255, 255, .4); text-transform: uppercase; }
+  .search input:focus { border-color: rgba(255, 255, 255, .35); background: rgba(255, 255, 255, .1); }
+
+  /* ---------- Rótulos de seção ---------- */
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    color: rgba(255, 255, 255, .65);
+    padding: 0 24px;
+    margin: 16px 0 8px;
+    white-space: nowrap;
+    transition: padding .45s var(--ease), font-size .3s ease;
+  }
+  .collapsed .section-label {
+    text-align: center;
+    padding: 0;
+    font-size: 9.5px;
+    letter-spacing: 1.4px;
+  }
+
+  /* ---------- Itens de navegação ---------- */
+  .nav { list-style: none; }
+
+  .item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    height: 48px;
+    width: 100%;
+    padding-right: 22px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: 15.5px;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background .2s ease;
+  }
+  .item:hover { background: rgba(255, 255, 255, .06); }
+  .item:focus-visible { outline: 2px solid rgba(255, 255, 255, .6); outline-offset: -2px; }
+
+  .item.active {
+    background: var(--red);
+    font-weight: 600;
+    box-shadow: 0 0 24px var(--red-glow), inset 0 1px 0 rgba(255, 255, 255, .2);
+  }
+
+  .icon-slot {
+    flex: none;
+    width: var(--icon-col);
+    margin-left: 21px;
+    display: grid;
+    place-items: center;
+    position: relative;
+  }
+  .icon-slot svg { width: 22px; height: 22px; }
+
+  /* ícones dentro de círculo (play, +, estrela) */
+  .circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .14);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15);
+    display: grid;
+    place-items: center;
+  }
+  .circle svg { width: 12px; height: 12px; }
+  .item.active .circle { background: #fff; color: var(--red); }
+
+  .label {
+    flex: 1;
+    transition: opacity .25s ease;
+  }
+  .item .badge { flex: none; transition: opacity .25s ease; }
+
+  /* bolinha vermelha que substitui o badge quando colapsado */
+  .dot {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red-glow);
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+
+  .collapsed .label,
+  .collapsed .item .badge,
+  .collapsed .profile-info,
+  .collapsed .profile .chev,
+  .collapsed .search input { opacity: 0; pointer-events: none; }
+  .collapsed .dot { opacity: 1; }
+
+  .profile-info, .profile .chev, .search input { transition: opacity .25s ease; }
+
+  /* ---------- Tooltip (modo colapsado) ---------- */
+  .tooltip {
+    position: fixed;
+    z-index: 50;
+    background: #fff;
+    color: #1a1a1a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-4px, -50%);
+    transition: opacity .15s ease, transform .15s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
+    white-space: nowrap;
+  }
+  .tooltip.show { opacity: 1; transform: translate(0, -50%); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0s !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Fundo: fitas cinzas em SVG (sem imagem externa) -->
+<svg class="bg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a8a90"/><stop offset=".5" stop-color="#3a3a3e"/><stop offset="1" stop-color="#121214"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a5a5aa"/><stop offset=".45" stop-color="#4b4b50"/><stop offset="1" stop-color="#18181a"/>
+    </linearGradient>
+    <linearGradient id="g3" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#1b1b1d"/><stop offset=".55" stop-color="#5d5d62"/><stop offset="1" stop-color="#2a2a2d"/>
+    </linearGradient>
+    <linearGradient id="g4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6e6e73"/><stop offset="1" stop-color="#1a1a1c"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="1.2"/></filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#161618"/>
+
+  <!-- camadas de trás -->
+  <path d="M-100 80 C 300 -40, 520 260, 820 160 S 1350 -60, 1700 120 L1700 -50 L-100 -50Z" fill="url(#g4)"/>
+  <path d="M-100 380 C 200 180, 520 420, 760 300 S 1200 60, 1700 260 L1700 520 C 1300 420, 1040 640, 760 560 S 200 520, -100 700Z" fill="url(#g2)"/>
+  <path d="M-100 700 C 240 520, 560 780, 860 660 S 1350 460, 1700 640 L1700 1100 L-100 1100Z" fill="url(#g1)"/>
+
+  <!-- fitas da frente -->
+  <path d="M-100 260 C 260 120, 480 460, 720 420 S 1100 160, 1250 380 S 1500 900, 1700 760 L1700 900 C 1480 1000, 1300 560, 1150 520 S 820 640, 600 600 S 140 420, -100 520Z" fill="url(#g3)"/>
+  <path d="M1100 -50 C 1000 160, 1260 300, 1240 520 S 1120 900, 1300 1100 L1700 1100 L1700 -50Z" fill="url(#g1)" opacity=".85"/>
+  <path d="M-100 860 C 200 760, 380 980, 640 900 S 900 760, 1000 1100 L-100 1100Z" fill="url(#g2)" opacity=".9"/>
+
+  <!-- bordas iluminadas -->
+  <g fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" filter="url(#soft)">
+    <path d="M-100 380 C 200 180, 520 420, 760 300 S 1200 60, 1700 260"/>
+    <path d="M-100 260 C 260 120, 480 460, 720 420 S 1100 160, 1250 380 S 1500 900, 1700 760"/>
+    <path d="M1100 -50 C 1000 160, 1260 300, 1240 520 S 1120 900, 1300 1100"/>
+    <path d="M-100 700 C 240 520, 560 780, 860 660 S 1350 460, 1700 640"/>
+    <path d="M-100 860 C 200 760, 380 980, 640 900 S 900 760, 1000 1100"/>
+  </g>
+  <g fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1">
+    <path d="M-100 400 C 200 200, 520 440, 760 320 S 1200 80, 1700 280"/>
+    <path d="M-100 420 C 200 220, 520 460, 760 340 S 1200 100, 1700 300"/>
+    <path d="M1130 -50 C 1030 160, 1290 300, 1270 520 S 1150 900, 1330 1100"/>
+    <path d="M1160 -50 C 1060 160, 1320 300, 1300 520 S 1180 900, 1360 1100"/>
+  </g>
+</svg>
+
+<aside class="sidebar" id="sidebar" aria-label="Menu lateral">
+  <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <div class="header">
+    <h1 class="brand"><span class="full">SideBar UI</span><span class="short" aria-hidden="true">S</span></h1>
+    <button class="bell" aria-label="Notificações (4)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>
+      <span class="badge">4</span>
+    </button>
+    <button class="toggle" id="toggle" aria-label="Recolher menu" aria-expanded="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      <span class="toggle-label" id="toggleLabel">Esconder</span>
+    </button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="scroll">
+    <div class="profile" data-tip="Anderson">
+      <div class="avatar" aria-hidden="true"></div>
+      <div class="profile-info">
+        <strong>Anderson</strong>
+        <small>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h14l-3-3M20 17H6l3 3"/></svg>
+          Trocar conta
+        </small>
+      </div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="search">
+      <span class="icon-slot" data-tip="Search">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="7" width="18" height="10" rx="5" transform="rotate(-20 12 12)"/><circle cx="14.5" cy="11" r="2.4" fill="#4a4a4f"/></svg>
+      </span>
+      <input type="search" placeholder="Procurar..." aria-label="Buscar">
+    </div>
+
+    <p class="section-label">MENU</p>
+    <ul class="nav">
+      <li><button class="item" data-tip="Home">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3L12 3Z"/></svg></span>
+        <span class="label">Home</span></button></li>
+
+      <li><button class="item active" data-tip="Continuar assistindo">
+        <span class="icon-slot"><span class="circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></span></span>
+        <span class="label">Continuar</span></button></li>
+
+      <li><button class="item" data-tip="Minha lista">
+        <span class="icon-slot"><span class="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="M12 4v16M4 12h16"/></svg></span><span class="dot"></span></span>
+        <span class="label">Minha lista</span><span class="badge">7</span></button></li>
+
+      <li><button class="item" data-tip="Series">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="m8 2 4 5 4-5"/><rect x="6" y="10" width="9" height="7" rx="1" fill="currentColor" stroke="none"/><circle cx="18" cy="11" r=".6" fill="currentColor"/><circle cx="18" cy="14" r=".6" fill="currentColor"/></svg></span>
+        <span class="label">Séries</span></button></li>
+
+      <li><button class="item" data-tip="Filmes">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="1.5"/><path d="M3 10h18M7 6v4M12 6v4M17 6v4"/></svg></span>
+        <span class="label">Filmes</span></button></li>
+
+      <li><button class="item" data-tip="Games">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 6h10a5 5 0 0 1 4.9 6l-.9 4.4a2.5 2.5 0 0 1-4.3 1.2L14.5 15h-5l-2.2 2.6A2.5 2.5 0 0 1 3 16.4L2.1 12A5 5 0 0 1 7 6Zm0 3v1.5H5.5v1.6H7V13.6h1.6v-1.5H10v-1.6H8.6V9H7Zm9.5.5a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Zm-2 2.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Z"/></svg></span>
+        <span class="label">Games</span></button></li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <p class="section-label">Descubra</p>
+    <ul class="nav">
+      <li><button class="item" data-tip="Atualizações">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="3" width="13" height="13" rx="2.5"/><path d="M16 16v2.5A2.5 2.5 0 0 1 13.5 21h-8A2.5 2.5 0 0 1 3 18.5v-8A2.5 2.5 0 0 1 5.5 8H8"/></svg></span>
+        <span class="label">Atualizações</span></button></li>
+
+      <li><button class="item" data-tip="Populares">
+        <span class="icon-slot"><span class="circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 3 6.6 7.2.7-5.4 4.9 1.6 7.1L12 17.6l-6.4 3.7 1.6-7.1L1.8 9.3 9 8.6z"/></svg></span></span>
+        <span class="label">Populares</span></button></li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <p class="section-label">GERAL</p>
+    <ul class="nav">
+      <li><button class="item" data-tip="Configurações">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.5 7.5 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.5 7.5 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.5 7.5 0 0 0 1.7 1L11 21h4l.4-2.7a7.5 7.5 0 0 0 1.7-1l2.5 1 2-3.5ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z" transform="translate(-1 0)"/></svg></span>
+        <span class="label">Configurações</span></button></li>
+
+      <li><button class="item" data-tip="Sair">
+        <span class="icon-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l-4 4 4 4M6 12h10"/></svg></span>
+        <span class="label">Sair</span></button></li>
+    </ul>
+  </div>
+</aside>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('toggle');
+  const toggleLabel = document.getElementById('toggleLabel');
+  const tooltip = document.getElementById('tooltip');
+
+  // Recolher / expandir
+  toggle.addEventListener('click', () => {
+    const collapsed = sidebar.classList.toggle('collapsed');
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    toggle.setAttribute('aria-label', collapsed ? 'Expandir menu' : 'Recolher menu');
+    toggleLabel.textContent = collapsed ? 'Mostrar' : 'Esconder';
+    tooltip.classList.remove('show');
+  });
+
+  // Item ativo
+  document.querySelectorAll('.item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.item.active').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Tooltip com o nome do item quando o menu está recolhido
+  document.querySelectorAll('[data-tip]').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (!sidebar.classList.contains('collapsed')) return;
+      const r = el.getBoundingClientRect();
+      const s = sidebar.getBoundingClientRect();
+      tooltip.textContent = el.dataset.tip;
+      tooltip.style.left = (s.right + 12) + 'px';
+      tooltip.style.top = (r.top + r.height / 2) + 'px';
+      tooltip.classList.add('show');
+    });
+    el.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+  });
+</script>
+</body>
+</html>
